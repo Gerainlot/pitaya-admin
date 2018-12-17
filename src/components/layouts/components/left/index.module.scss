@@ -1,0 +1,22 @@
+.logo {
+    height: 64px;
+    position: relative;
+    line-height: 64px;
+    padding-left: 24px;
+    transition: all 0.3s;    
+    overflow: hidden;
+    background: #002140;
+    img {
+        display: inline-block;
+        vertical-align: middle;
+        height: 16px;        
+    }
+    h1 {
+        color: #ffffff;
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 16px;
+        font-family: "PingFangSC-Medium";
+        margin: 0 0 0 12px;
+    }
+}

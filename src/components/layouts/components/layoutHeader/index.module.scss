@@ -1,0 +1,48 @@
+//触发sider
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color .3s;
+    &:hover {
+        color: #1890ff;
+    }
+}
+.rightContent{
+    float: right;
+    height: 100%;
+    line-height: 64px;
+    overflow: hidden;
+    padding-right: 28px;
+    .rightIcon{
+        display: inline-block;
+        vertical-align: middle;
+        padding: 0 12px;
+        height: 100%;
+        line-height: 64px;
+        cursor: pointer;        
+    }
+    .user{
+        display: inline-block;
+        vertical-align: middle;
+        padding-left: 12px;
+        height: 100%;
+        line-height: 64px;
+        cursor: pointer;        
+        .userLogo{
+            display: inline-block;
+            vertical-align: top;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin: 20px 8px 20px 0;
+            img{                
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+            
+        }
+    }
+}
