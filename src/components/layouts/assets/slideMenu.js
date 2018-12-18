@@ -17,9 +17,13 @@ export default
     title : '供应商管理',
     icon  : 'team',
 }, {
-    key   : '/ordermanage',
+    key   : '/salemanage',
     title : '订单管理',
     icon  : 'team',
+    list  : [{
+        key   : '/list',
+        title : '订单列表'
+    }]
 }, {
     key   : '/usermanage',
     title : '用户管理',

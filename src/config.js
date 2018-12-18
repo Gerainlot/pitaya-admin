@@ -1,6 +1,6 @@
 const config = {
     dev: {
-        apiRootURL: 'http://192.168.1.149:8080/',
+        apiRootURL: 'http://localhost:8080/',
         leagcyAPIRootURL: 'http://localhost:9100/managers/api/',
         basename: '/',
         // apiRootURL: 'http://10.10.11.4:8090/',
