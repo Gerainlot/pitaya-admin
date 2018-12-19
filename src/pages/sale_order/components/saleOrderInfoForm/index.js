@@ -5,6 +5,7 @@ import { Form, Input, Select, Button ,Divider,Tag,Table, Row,Col} from "antd";
 // import classnames from "classnames";
 import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
 // import styles from "./index.module.scss";
+import EditableTable from "./test";
 
 const FormItem = Form.Item;
 
@@ -23,38 +24,51 @@ class SaleOrderInfoForm extends Component {
         title: '商品名称',
         dataIndex: 'goodsName',
         key: 'goodsName',
+        editable: true,
       }, {
         title: '数量',
         key: 'goodsQuantity',
         dataIndex: 'goodsQuantity',
+        editable: true,
       }, 
       {
         title: '成本单价',
         key: 'costUnitPrice',
         dataIndex: 'costUnitPrice',
+        editable: true,
       },
       {
         title: '销售单价',
         key: 'saleUnitPrice',
         dataIndex: 'saleUnitPrice',
+        editable: true,
       },
       {
         title: '备注',
         key: 'remark',
         dataIndex: 'remark',
+        editable: true,
       }];
 
     state = {
-        info : {}
+        info : {},
     };
    
     componentWillReceiveProps(nextProps) {
         this.setState({info: nextProps.info})
     }
 
-   componentDidMount() {
-       console.log("componentDidMount...")
-   }
+    componentDidMount() {
+        console.log("componentDidMount...")
+    }
+    getlist1data = (data)=>{
+        this.setState({
+            info: {...this.state.info, ...{items: data}}
+        })
+    }
+    save = ()=>{
+        console.log(this.state.info)
+    }
 
     render() {
         const {info} = this.state
@@ -146,9 +160,15 @@ class SaleOrderInfoForm extends Component {
                 <Divider orientation="left">商品明细:</Divider>
                 {
                     info.items && 
-                    <Table columns={this.columns} dataSource={info.items} pagination={false}></Table>
+                    <EditableTable 
+                        columns={this.columns} 
+                        dataSource={info.items}
+                        getData={this.getlist1data}
+                    ></EditableTable>
+                    // <Table rowKey={record => record.id} columns={this.columns} dataSource={info.items} pagination={false}></Table>
                 }
                 <Divider orientation="left">付款信息:</Divider>
+                <Button onClick={this.save}>保存</Button>
             </Fragment>
             
         )
