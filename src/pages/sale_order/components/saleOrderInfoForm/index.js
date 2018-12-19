@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from "react-redux";
-import { Form, Input, Select, Button ,Divider,Tag,Table} from "antd";
+import { Form, Input, Select, Button ,Divider,Tag,Table, Row,Col} from "antd";
 // import { fromJS } from "immutable";
 // import classnames from "classnames";
 import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
@@ -59,41 +59,90 @@ class SaleOrderInfoForm extends Component {
     render() {
         const {info} = this.state
         const formItemLayout = {
-            labelCol: { span: 2 },
-            wrapperCol: { span: 20 },
+            labelCol: { span: 6 },
+            wrapperCol: { span: 18 },
           };
-        // return null
         return(
             <Fragment>
                 <Divider orientation="left">基本信息</Divider>
                 {info.order && <Form onSubmit={this.handleSubmit}>
-                    <FormItem
-                    {...formItemLayout}
-                    label="订单号"
-                    >
-                    <span className="ant-form-text">{info.order.orderNo}</span>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="状态"> 
-                        <span className="ant-form-text">{info.order.status}</span>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="下单时间">
-                        <span className="ant-form-text">{info.order.createTime}</span>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="供应商ID">
-                        <span className="ant-form-text">{"未设置"}</span>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="订单总金额">
-                        <span className="ant-form-text">{info.order.orderAmt}</span>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="商品金额">
-                        <span className="ant-form-text">{info.order.goodsAmt}</span>
-                    </FormItem>
-                    <FormItem {...formItemLayout} label="运费">
-                        <span className="ant-form-text">{info.order.expressFee}</span>
+                    <FormItem>
+                        <Row gutter={8}>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="订单号">
+                                    <Input value={info.order.orderNo} disabled />
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="状态"> 
+                                    <span className="ant-form-text">{info.order.status}</span>
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="下单时间"> 
+                                    <span className="ant-form-text">{info.order.createTime}</span>
+                                </FormItem>
+                            </Col>
+                        </Row>                   
                     </FormItem>
                     
+                    <FormItem>
+                        <Row gutter={8}>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="订单总金额">
+                                    <span className="ant-form-text">{info.order.orderAmt}</span>
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="商品金额">
+                                    <span className="ant-form-text">{info.order.goodsAmt}</span>
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="运费">
+                                    <span className="ant-form-text">{info.order.expressFee}</span>
+                                </FormItem>
+                            </Col>
+                        </Row>        
+                    </FormItem>
+                    <Divider orientation="left">配送信息:</Divider>
+                    <FormItem>
+                        <Row gutter={8}>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="配送方式">
+                                    <span className="ant-form-text">{info.order.expressMethod}</span>
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="快递单号">
+                                    <span className="ant-form-text">{info.order.expressOrderNo}</span>
+                                </FormItem>
+                            </Col>
+                            
+                        </Row>        
+                    </FormItem>
+                    <FormItem>
+                        <Row gutter={8}>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="收件人">
+                                    <span className="ant-form-text">{info.order.receiver}</span>
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="收件人手机号">
+                                    <span className="ant-form-text">{info.order.phoneNo}</span>
+                                </FormItem>
+                            </Col>
+                            <Col span={8}>
+                                <FormItem {...formItemLayout} label="收件地址">
+                                    <span className="ant-form-text">{info.order.address}</span>
+                                </FormItem>
+                            </Col>
+                            
+                        </Row>        
+                    </FormItem>
                 </Form>}
-                <Divider orientation="left">配送信息:</Divider>
+                
                 <Divider orientation="left">商品明细:</Divider>
                 {
                     info.items && 
