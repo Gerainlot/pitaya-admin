@@ -1,6 +1,6 @@
   import React,{ Component, Fragment } from 'react'; 
   import {
-    Table, Input, InputNumber, Popconfirm, Form,Button
+    Table, Input, InputNumber, Popconfirm, Form
   } from 'antd';
   
   const FormItem = Form.Item;
@@ -60,7 +60,8 @@
   class EditableTable extends Component {
     constructor(props) {
         super(props);
-        this.state = { data: [], editingKey: '' };
+        this.writeBackFunc = this.props.writeBackFunc
+        this.state = { data: this.props.dataSource, editingKey: '' };
         this.columns = [...this.props.columns, {
             title: 'operation',
             dataIndex: 'operation',
@@ -74,38 +75,37 @@
                             {form => (
                             <a
                                 href="javascript:;"
-                                onClick={() => this.save(form, record.key)}
-                                style={{ marginRight: 8 }}
-                            >
+                                onClick={() => this.save(form, record.stockId)}
+                                style={{ marginRight: 8 }}>
                                 Save
                             </a>
                             )}
                         </EditableContext.Consumer>
                         <Popconfirm
                             title="Sure to cancel?"
-                            onConfirm={() => this.cancel(record.key)}
+                            onConfirm={() => this.cancel(record.stockId)}
                         >
                             <a>Cancel</a>
                         </Popconfirm>
                         </span>
                     ) : (
-                        <a onClick={() => this.edit(record.key)}>Edit</a>
+                        <a onClick={() => this.edit(record.stockId)}>Edit</a>
                     )}
                     </div>
                 );
             }
         }];
-        
+        console.log(this.columns)
     }
     componentWillReceiveProps(nextProps){
         this.setState({
             data: nextProps.dataSource
         },()=>{
-            // this.props.getData(this.state.data)
+            // this.props.writeBackFunc(this.state.data)
         })
     }
   
-    isEditing = record => record.key === this.state.editingKey;
+    isEditing = record => record.stockId === this.state.editingKey;
   
     cancel = () => {
       this.setState({ editingKey: '' });
@@ -117,7 +117,7 @@
           return;
         }
         const newData = [...this.state.data];
-        const index = newData.findIndex(item => key === item.key);
+        const index = newData.findIndex(item => key === item.stockId);
         if (index > -1) {
           const item = newData[index];
           newData.splice(index, 1, {
@@ -125,12 +125,12 @@
             ...row,
           });
           this.setState({ data: newData, editingKey: '' }, ()=>{
-            this.props.getData(newData)
+            this.writeBackFunc(newData)
           });
         } else {
           newData.push(row);
           this.setState({ data: newData, editingKey: '' }, ()=>{
-            this.props.getData(newData)
+            this.writeBackFunc(newData)
           });
         }
       });
@@ -140,6 +140,21 @@
       this.setState({ editingKey: key });
     }
 
+    handleAdd = () => {
+        const { data } = this.state;
+        const newData = {
+          id: 1000,
+          goodsId : 1001,
+          goodsName : "Pitaty gold",
+          goodsQuantity : 99,
+          costUnitPrice : 5.00,
+          saleUnitPrice : 10.00,
+          remark : "Remark...",
+        };
+        this.setState({
+          data: [...data, newData],
+        });
+      }
 
     render() {
       const components = {
@@ -167,7 +182,7 @@
       return (
           <Fragment>
             <Table
-                rowKey={record => record.id}
+                rowKey={record => record.stockId}
                 components={components}
                 bordered
                 dataSource={this.state.data}

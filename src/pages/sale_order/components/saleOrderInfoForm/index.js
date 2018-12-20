@@ -1,15 +1,47 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from "react-redux";
-import { Form, Input, Select, Button ,Divider,Tag,Table, Row,Col} from "antd";
+// import { connect } from "react-redux";
+import Http from '../../../../http/http'
+import { Form, Input, Button ,Divider,Table, Row,Col,Modal} from "antd";
 // import { fromJS } from "immutable";
 // import classnames from "classnames";
-import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
+// import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
 // import styles from "./index.module.scss";
-import EditableTable from "./test";
+import EditableTable from "./editable_table";
 
 const FormItem = Form.Item;
 
 class SaleOrderInfoForm extends Component {
+
+    stock_headers = [{
+        title: '库存ID',
+        dataIndex: 'id',
+        key: 'id',
+      },{
+        title: '成本单价',
+        dataIndex: 'costUnitPrice',
+        key: 'costUnitPrice',
+      },{
+        title: '销售单价',
+        dataIndex: 'saleUnitPrice',
+        key: 'saleUnitPrice',
+      },{
+        title: '库存名称',
+        dataIndex: 'name',
+        key: 'name',
+      },{
+        title: '剩余库存',
+        dataIndex: 'availableQuantity',
+        key: 'availableQuantity',
+      },{
+        title: '规格',
+        dataIndex: 'specification',
+        key: 'specification',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status',
+      },]
 
     columns = [{
         title: 'ID',
@@ -24,7 +56,6 @@ class SaleOrderInfoForm extends Component {
         title: '商品名称',
         dataIndex: 'goodsName',
         key: 'goodsName',
-        editable: true,
       }, {
         title: '数量',
         key: 'goodsQuantity',
@@ -35,7 +66,6 @@ class SaleOrderInfoForm extends Component {
         title: '成本单价',
         key: 'costUnitPrice',
         dataIndex: 'costUnitPrice',
-        editable: true,
       },
       {
         title: '销售单价',
@@ -52,18 +82,59 @@ class SaleOrderInfoForm extends Component {
 
     state = {
         info : {},
+        modal1Visible : false,
+        loadedStocks:[],
+        selectedStocks:[],
+        saleStocks:[]
     };
    
+    loadStockData(){
+        Http.postJson('/manage/stock/list', {}).then((res) => {
+            this.setState({loadedStocks:res.data})
+		})
+    }
+
+    onStockSelected(selectedRows){
+        
+        var slectedStocks = selectedRows.map(function(row) { 
+            var ss = {};
+            ss.id = 0;
+            ss.orderNo = null;
+            ss.goodsId = row.goodsId;
+            ss.goodsName = row.name;
+            ss.stockId = row.id;
+            ss.costUnitPrice = row.costUnitPrice;
+            ss.saleUnitPrice = row.saleUnitPrice;
+            return ss;
+         })
+        this.setState({selectedStocks:slectedStocks})
+    }
+
+    addSelectedStocks2SaleStocks() {
+        this.setModal1Visible(false);
+        this.setState({saleStocks:[...this.state.saleStocks,...this.state.selectedStocks]},() => {
+            console.log(this.state.saleStocks)
+        })
+        
+    }
+
+    setModal1Visible(visible) {
+        this.setState({ modal1Visible : visible });
+        if (visible){
+            this.loadStockData()
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
-        this.setState({info: nextProps.info})
+        this.setState({info: nextProps.info,saleStocks:nextProps.info.items})
     }
 
     componentDidMount() {
         console.log("componentDidMount...")
     }
-    getlist1data = (data)=>{
+    writePropBack = (data) => {
         this.setState({
-            info: {...this.state.info, ...{items: data}}
+            saleStocks: data
         })
     }
     save = ()=>{
@@ -71,11 +142,17 @@ class SaleOrderInfoForm extends Component {
     }
 
     render() {
-        const {info} = this.state
+        const {info,saleStocks} = this.state
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 18 },
           };
+        // rowSelection object indicates the need for row selection
+        const rowSelection = {
+            onChange: (selectedRowKeys, selectedRows) => {
+                this.onStockSelected(selectedRows)
+            }
+        };
         return(
             <Fragment>
                 <Divider orientation="left">基本信息</Divider>
@@ -155,17 +232,37 @@ class SaleOrderInfoForm extends Component {
                             
                         </Row>        
                     </FormItem>
+                    
                 </Form>}
                 
                 <Divider orientation="left">商品明细:</Divider>
+                <Button className="primary" onClick={() => this.setModal1Visible(true)}>添加商品</Button>
+                <Modal
+                    title="选择商品"
+                    style={{ top: 20}}
+                    width={768}
+                    visible={this.state.modal1Visible}
+                    onOk={() => this.addSelectedStocks2SaleStocks()}
+                    onCancel={() => this.setModal1Visible(false)}
+                    >
+                    <Table 
+                        rowSelection={rowSelection}
+                        rowKey={record => record.id}
+                        bordered
+                        dataSource={this.state.loadedStocks}
+                        columns={this.stock_headers}
+                        pagination={false}
+                        >
+                    </Table>
+                </Modal>
                 {
-                    info.items && 
+                    saleStocks && 
+                    
                     <EditableTable 
                         columns={this.columns} 
-                        dataSource={info.items}
-                        getData={this.getlist1data}
+                        dataSource={saleStocks}
+                        writeBackFunc={this.writePropBack}
                     ></EditableTable>
-                    // <Table rowKey={record => record.id} columns={this.columns} dataSource={info.items} pagination={false}></Table>
                 }
                 <Divider orientation="left">付款信息:</Divider>
                 <Button onClick={this.save}>保存</Button>
