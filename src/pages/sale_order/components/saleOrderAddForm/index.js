@@ -1,16 +1,16 @@
 import React, { Component, Fragment } from 'react';
-// import { connect } from "react-redux";
 import Http from '../../../../http/http'
-import { Form, Input, Button ,Divider,Table, Row,Col,Modal,DatePicker,TimePicker} from "antd";
+import { Form, Input, Button ,Divider,Table, Select,Modal,DatePicker,TimePicker} from "antd";
 import moment from 'moment';
-// import { fromJS } from "immutable";
-// import classnames from "classnames";
-// import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
-// import styles from "./index.module.scss";
 import EditableTable from "./editable_table";
 
 const FormItem = Form.Item;
 
+const Option = Select.Option;
+
+/**
+ * 订单新增表单组件中的子组件可以进行复用，后期优化
+ */
 class SaleOrderInfoForm extends Component {
 
     stock_headers = [{
@@ -82,8 +82,7 @@ class SaleOrderInfoForm extends Component {
       }];
 
     state = {
-        info : {},
-        modal1Visible : false,
+        stockModalVisible : false,
         loadedStocks:[],
         selectedStocks:[],
         saleStocks:[]
@@ -103,6 +102,7 @@ class SaleOrderInfoForm extends Component {
             ss.orderNo = null;
             ss.goodsId = row.goodsId;
             ss.goodsName = row.name;
+            ss.goodsQuantity = 0;
             ss.stockId = row.id;
             ss.costUnitPrice = row.costUnitPrice;
             ss.saleUnitPrice = row.saleUnitPrice;
@@ -112,47 +112,41 @@ class SaleOrderInfoForm extends Component {
     }
 
     addSelectedStocks2SaleStocks() {
-        this.setModal1Visible(false);
+        this.setStockModalVisible(false);
         this.setState({saleStocks:[...this.state.saleStocks,...this.state.selectedStocks]},() => {
             console.log(this.state.saleStocks)
         })
         
     }
 
-    setModal1Visible(visible) {
-        this.setState({ modal1Visible : visible });
+    setStockModalVisible(visible) {
+        this.setState({ stockModalVisible : visible });
         if (visible){
             this.loadStockData()
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({info: nextProps.info,saleStocks:nextProps.info.items})
-    }
-
-    componentDidMount() {
-        console.log("componentDidMount...")
-    }
     writePropBack = (data) => {
         this.setState({
             saleStocks: data
         })
     }
-    save = ()=>{
-        console.log(this.state.info)
-    }
 
     handleSubmit = (e) => {
         e.preventDefault();
+        const details = this.state.saleStocks
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+            var requestBody = {...values,...{"details":details}}
+            Http.postJson("/manage/sale/order/add",requestBody).then((result => {
+                console.log(result)
+            }))
           }
         });
+        
     }
 
     render() {
-        const {info,saleStocks} = this.state
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 18 },
@@ -166,56 +160,53 @@ class SaleOrderInfoForm extends Component {
         const { getFieldDecorator } = this.props.form;
         return(
             <Fragment>
-                {info.order && <Form onSubmit={this.handleSubmit}>
+                <Form onSubmit={this.handleSubmit}>
                 <Divider orientation="left">基本信息</Divider>
-                <FormItem {...formItemLayout} label="订单号" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-                    {getFieldDecorator('orderNo', {
-                        rules: [{ required: true, message: 'Please input your note!' }],
-                        initialValue: info.order.orderNo
-                    })(
-                        <Input disabled/>
-                    )}
-                </FormItem>
                 <FormItem {...formItemLayout} label="状态" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('status', {
                         rules: [{ required: true, message: 'Please input your note!' }],
-                        initialValue: info.order.status
+                        initialValue: "WT_PAY"
                     })(
-                        <Input/>
+                        <Select style={{ width: 120 }}>
+                            <Option value="REFUNDING">退款中</Option>
+                            <Option value="WT_PAY">待付款</Option>
+                            <Option value="PAYED">已付款</Option>
+                        </Select>
                     )}
                 </FormItem>
-                <FormItem {...formItemLayout} label="下单时间" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-                    <Input defaultValue={info.order.createTime} disabled />
-                </FormItem>
+                
                 <FormItem {...formItemLayout} label="订单总金额" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-                    <Input defaultValue={info.order.orderAmt} disabled />
+                    <Input value={'0.00'} disabled />
                 </FormItem>
                 <FormItem {...formItemLayout} label="商品金额" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
-                    <Input defaultValue={info.order.goodsAmt} disabled />
+                    <Input value={'0.00'} disabled />
                 </FormItem>
-                
-                   
+
                 <Divider orientation="left">配送信息:</Divider>
                     <FormItem label="配送方式" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                         {getFieldDecorator('expressMethod', {
                             rules: [{ required: true, message: '请输入快递方式' }],
-                            initialValue: info.order.expressMethod
+                            initialValue: "zhongtong"
                         })(
-                            <Input/>
+                        <Select style={{ width: 120 }}>
+                            <Option value="yunda">韵达快递</Option>
+                            <Option value="yuantong">圆通快递</Option>
+                            <Option value="zhongtong">中通快递</Option>
+                            <Option value="shunfeng">顺丰快递</Option>
+                        </Select>
                         )}
                     </FormItem>
                     <FormItem  label="运费" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="expressFee">
                         {getFieldDecorator('expressFee', {
                             rules: [{ required: true, message: '请输入快递费用' }],
-                            initialValue: info.order.expressFee
+                            initialValue : '0.00'
                         })(
-                            <Input/>
+                            <Input disabled/>
                         )}
                     </FormItem>
                     <FormItem  label="快递单号" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="expressOrderNo">
                         {getFieldDecorator('expressOrderNo', {
                             rules: [{ required: true, message: '请输入快递费用' }],
-                            initialValue: info.order.expressOrderNo
                         })(
                             <Input/>
                         )}
@@ -223,7 +214,6 @@ class SaleOrderInfoForm extends Component {
                     <FormItem label="收件人" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="receiver">
                     {getFieldDecorator('receiver', {
                             rules: [{ required: true, message: '请输入收件人' }],
-                            initialValue: info.order.receiver
                         })(
                             <Input/>
                         )}
@@ -231,7 +221,6 @@ class SaleOrderInfoForm extends Component {
                     <FormItem label="收件人手机号" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="phoneNo">
                     {getFieldDecorator('phoneNo', {
                             rules: [{ required: true, message: '请输入收件人手机号' }],
-                            initialValue: info.order.phoneNo
                         })(
                             <Input/>
                         )}
@@ -239,20 +228,19 @@ class SaleOrderInfoForm extends Component {
                     <FormItem label="收件地址" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="address">
                     {getFieldDecorator('address', {
                             rules: [{ required: true, message: '请输入收件人地址' }],
-                            initialValue: info.order.receiver
                         })(
                             <Input/>
                         )}
                     </FormItem>
                     <Divider orientation="left">商品明细:</Divider>
-                    <Button className="primary" onClick={() => this.setModal1Visible(true)}>添加商品</Button>
+                    <Button className="primary" onClick={() => this.setStockModalVisible(true)}>添加商品</Button>
                     <Modal
                         title="选择商品"
                         style={{ top: 20}}
                         width={768}
-                        visible={this.state.modal1Visible}
+                        visible={this.state.stockModalVisible}
                         onOk={() => this.addSelectedStocks2SaleStocks()}
-                        onCancel={() => this.setModal1Visible(false)}
+                        onCancel={() => this.setStockModalVisible(false)}
                         >
                         <Table 
                             rowSelection={rowSelection}
@@ -265,17 +253,17 @@ class SaleOrderInfoForm extends Component {
                         </Table>
                     </Modal>
                     {
-                        saleStocks && 
+                        this.state.saleStocks && 
                         
                         <EditableTable 
                             columns={this.columns} 
-                            dataSource={saleStocks}
+                            dataSource={this.state.saleStocks}
                             writeBackFunc={this.writePropBack}
                         ></EditableTable>
                     }
                     <Divider orientation="left">付款信息:</Divider>
-                    <Button type="primary" htmlType="submit">保存</Button>    
-                </Form>}
+                    <Button type="primary" htmlType="submit">创建</Button>    
+                </Form>
             </Fragment>
             
         )

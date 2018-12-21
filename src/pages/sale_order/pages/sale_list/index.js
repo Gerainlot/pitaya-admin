@@ -19,7 +19,7 @@ class SaleOrderList extends Component {
         const { getSaleOrderTableData } = this.props;
         return (
             <Fragment>
-                <Link to="/goodsmanage/addgoods">新增订单</Link>
+                <Link to="/salemanage/add">新增订单</Link>
                 <SaleOrderTable
                     tableData={saleOrderTableData.toJS()}
                     pagination={saleOrderTableDataPagination}
