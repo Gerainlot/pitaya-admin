@@ -28,6 +28,10 @@ export default
     key   : '/usermanage',
     title : '用户管理',
     icon  : 'team',
+    list  : [{
+        key   : '/list',
+        title : '用户列表'
+    }]
 }, {
     key   : '/staffmanage',
     title : '员工管理',

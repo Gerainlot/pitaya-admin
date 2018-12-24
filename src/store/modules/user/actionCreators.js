@@ -30,3 +30,36 @@ export const updateCurrentUser = (value) => ({
 // 		})
 // 	}
 // }
+
+//获取用户列表数据
+export const queryUserList = (params) => {
+    
+    return (dispatch) => {
+		Http.postJson('/manage/user/list', params).then((res) => {
+            const result = res.data.items;
+			result && dispatch(udpateUserStoreTableData(result))
+		})
+	}
+}
+
+export const queryUserInfo = (params) => {
+    
+    return (dispatch) => {
+		Http.get('/manage/user/info', params).then((res) => {
+            const result = res.data.user;
+			result && dispatch(updateUserInfoData(result))
+		})
+	}
+}
+
+//更新redux中用户列表数据
+export const udpateUserStoreTableData = (value) => ({
+	type: constants.updateStoreUserTableData,
+	value
+})
+
+//更新redux中用户详情数据
+export const updateUserInfoData = (value) => ({
+	type: constants.updateStoreUserInfoData,
+	value
+})
