@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import SaleOrderTable from "../../components/saleOrderTable";
 import { saleOrderTableDataPageParams } from "../../../../utils/pageParams";
 import { actionCreators as saleOrderActionCreator } from "../../../../store/modules/sale_order";
+import { Button } from 'antd';
 
 
 class SaleOrderList extends Component {
@@ -19,7 +20,9 @@ class SaleOrderList extends Component {
         const { getSaleOrderTableData } = this.props;
         return (
             <Fragment>
-                <Link to="/salemanage/add">新增订单</Link>
+                <Link to="/salemanage/add">
+                    <Button type="primary">新增订单</Button>
+                </Link>
                 <SaleOrderTable
                     tableData={saleOrderTableData.toJS()}
                     pagination={saleOrderTableDataPagination}

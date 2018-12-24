@@ -233,7 +233,7 @@ class SaleOrderInfoForm extends Component {
                         )}
                     </FormItem>
                     <Divider orientation="left">商品明细:</Divider>
-                    <Button className="primary" onClick={() => this.setStockModalVisible(true)}>添加商品</Button>
+                    <Button type="primary" onClick={() => this.setStockModalVisible(true)}>添加商品</Button>
                     <Modal
                         title="选择商品"
                         style={{ top: 20}}

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 // import { connect } from "react-redux";
 import Http from '../../../../http/http'
-import { Form, Input, Button ,Divider,Table, Row,Col,Modal,DatePicker,TimePicker} from "antd";
+import { Form, Input, Button ,Divider,Table, Select,Modal,} from "antd";
 import moment from 'moment';
 // import { fromJS } from "immutable";
 // import classnames from "classnames";
@@ -10,6 +10,7 @@ import moment from 'moment';
 import EditableTable from "./editable_table";
 
 const FormItem = Form.Item;
+const Option = Select.Option;
 
 class SaleOrderInfoForm extends Component {
 
@@ -83,7 +84,7 @@ class SaleOrderInfoForm extends Component {
 
     state = {
         info : {},
-        modal1Visible : false,
+        stockModalVisible : false,
         loadedStocks:[],
         selectedStocks:[],
         saleStocks:[]
@@ -112,15 +113,15 @@ class SaleOrderInfoForm extends Component {
     }
 
     addSelectedStocks2SaleStocks() {
-        this.setModal1Visible(false);
+        this.setStockModalVisible(false);
         this.setState({saleStocks:[...this.state.saleStocks,...this.state.selectedStocks]},() => {
             console.log(this.state.saleStocks)
         })
         
     }
 
-    setModal1Visible(visible) {
-        this.setState({ modal1Visible : visible });
+    setStockModalVisible(visible) {
+        this.setState({ stockModalVisible : visible });
         if (visible){
             this.loadStockData()
         }
@@ -138,15 +139,15 @@ class SaleOrderInfoForm extends Component {
             saleStocks: data
         })
     }
-    save = ()=>{
-        console.log(this.state.info)
-    }
 
     handleSubmit = (e) => {
-        e.preventDefault();
+        const details = this.state.saleStocks
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+            var requestBody = {...values,...{"details":details}}
+            Http.postJson("/manage/sale/order/edit",requestBody).then((result => {
+                console.log(result)
+            }))
           }
         });
     }
@@ -181,7 +182,12 @@ class SaleOrderInfoForm extends Component {
                         rules: [{ required: true, message: 'Please input your note!' }],
                         initialValue: info.order.status
                     })(
-                        <Input/>
+                        <Select style={{ width: 120 }}>
+                            <Option value="REFUNDING">退款中</Option>
+                            <Option value="WT_PAY">待付款</Option>
+                            <Option value="PAYED">已付款</Option>
+                            <Option value="CREATED">已创建</Option>
+                        </Select>
                     )}
                 </FormItem>
                 <FormItem {...formItemLayout} label="下单时间" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
@@ -201,7 +207,12 @@ class SaleOrderInfoForm extends Component {
                             rules: [{ required: true, message: '请输入快递方式' }],
                             initialValue: info.order.expressMethod
                         })(
-                            <Input/>
+                        <Select style={{ width: 120 }}>
+                            <Option value="yunda">韵达快递</Option>
+                            <Option value="yuantong">圆通快递</Option>
+                            <Option value="zhongtong">中通快递</Option>
+                            <Option value="shunfeng">顺丰快递</Option>
+                        </Select>
                         )}
                     </FormItem>
                     <FormItem  label="运费" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="expressFee">
@@ -245,14 +256,14 @@ class SaleOrderInfoForm extends Component {
                         )}
                     </FormItem>
                     <Divider orientation="left">商品明细:</Divider>
-                    <Button className="primary" onClick={() => this.setModal1Visible(true)}>添加商品</Button>
+                    <Button type="primary" onClick={() => this.setStockModalVisible(true)}>添加商品</Button>
                     <Modal
                         title="选择商品"
                         style={{ top: 20}}
                         width={768}
-                        visible={this.state.modal1Visible}
+                        visible={this.state.stockModalVisible}
                         onOk={() => this.addSelectedStocks2SaleStocks()}
-                        onCancel={() => this.setModal1Visible(false)}
+                        onCancel={() => this.setStockModalVisible(false)}
                         >
                         <Table 
                             rowSelection={rowSelection}
