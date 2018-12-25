@@ -2,14 +2,14 @@ import React, { Component, Fragment } from 'react';
 import { connect } from "react-redux";
 import { withRouter } from 'react-router-dom';
 import UserInfoForm from "../../components/userInfoForm";
-import { Button } from "antd";
 import { actionCreators as userActionCreator } from "../../../../store/modules/user";
 
 
 class UserInfo extends Component {
     componentDidMount(){
-        const { getInfo } = this.props;
+        const { getInfo,getAddresses } = this.props;
         getInfo(this.props.match.params.id)
+        getAddresses(this.props.match.params.id)
     }
     //点击保存
     handleSave= ()=>{this.formRef.handleSubmit()}
@@ -25,10 +25,14 @@ class UserInfo extends Component {
 }
 const mapStateToProps = (state) => ({
     userInfo: state.getIn(["user","userInfoData"]),
+    userAddresses : state.getIn(["user","addresses"])
 })
 const mapDispatchToProps = (dispatch) => ({
     getInfo(id){
         dispatch(userActionCreator.queryUserInfo({"id":id}))
+    },
+    getAddresses(userId){
+        dispatch(userActionCreator.queryUserAddresses({"userId":userId}))
     }
 })
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UserInfo));

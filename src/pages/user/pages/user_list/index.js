@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import UserTable from "../../components/userTable";
 import { userTableDataPageParams } from "../../../../utils/pageParams";
 import { actionCreators as userActionCreator } from "../../../../store/modules/user";
-import { Button } from 'antd';
+import { Button, Row, Col } from 'antd';
 
 
 class UserList extends Component {
@@ -17,9 +17,17 @@ class UserList extends Component {
         const { getUserTableData } = this.props;
         return (
             <Fragment>
-                <Link to="/usermanage/add">
-                    <Button type="primary">新增用户</Button>
-                </Link>
+                <Row>
+                    <Col offset={12} span={10}>
+                        <div style={{"textAlign":"right"}}>
+                            <Link to="/usermanage/add">
+                                <Button type="primary">新增用户</Button>
+                            </Link>
+                        </div>
+                    </Col>
+                </Row>
+                
+                        
                 <UserTable
                     tableData={userTableData.toJS()}
                     pagination={userTablePagination}

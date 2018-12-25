@@ -1,12 +1,32 @@
 import React, { Component, Fragment } from 'react';
 import Http from '../../../../http/http'
-import { Form, Input, Button ,Divider,Table, Select,Modal,} from "antd";
-import EditableTable from "./editable_table";
+import { Form, Input, Button ,Divider,Icon, Select,Modal,Row,Col} from "antd";
+import EditableTable from "../../components/table/editable_table";
+import DrawerForm from "./drawer_form"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class UserInfoForm extends Component {
+
+    columns = [{
+        title: '地址ID',
+        dataIndex: 'id',
+        key: 'id',
+      }, {
+        title: '收件人',
+        dataIndex: 'name',
+        key: 'name',
+      }, {
+        title: '手机号',
+        dataIndex: 'phoneNo',
+        key: 'phoneNo',
+      }, {
+        title: '地址详情',
+        key: 'address',
+        dataIndex: 'address',
+        editable: true,
+      }];
 
     state = {
         userBasicInfo : {},
@@ -89,7 +109,15 @@ class UserInfoForm extends Component {
                 </FormItem>
                    
                 <Divider orientation="left">配送地址 :</Divider>
-                <Button type="primary" htmlType="submit">保存</Button>    
+                <DrawerForm></DrawerForm>
+                <EditableTable columns={this.columns}></EditableTable>
+                <Row>
+                    <Col offset={5} span={16}>
+                        <div style={{"textAlign":"right"}}>
+                            <Button type="primary" htmlType="submit">保存</Button>   
+                        </div>
+                    </Col>
+                </Row>
                 </Form>}
             </Fragment>
             

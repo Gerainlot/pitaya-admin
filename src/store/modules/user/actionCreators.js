@@ -52,6 +52,16 @@ export const queryUserInfo = (params) => {
 	}
 }
 
+export const queryUserAddresses = (params) => {
+    
+    return (dispatch) => {
+		Http.get('/manage/user/address/list', params).then((res) => {
+            const result = res.data;
+			result && dispatch(updateUserAddressesData(result))
+		})
+	}
+} 
+
 //更新redux中用户列表数据
 export const udpateUserStoreTableData = (value) => ({
 	type: constants.updateStoreUserTableData,
@@ -61,5 +71,11 @@ export const udpateUserStoreTableData = (value) => ({
 //更新redux中用户详情数据
 export const updateUserInfoData = (value) => ({
 	type: constants.updateStoreUserInfoData,
+	value
+})
+
+//更新redux中用户地址数据
+export const updateUserAddressesData = (value) => ({
+	type: constants.updateStoreUserAddressesData,
 	value
 })
