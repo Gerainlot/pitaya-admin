@@ -41,13 +41,12 @@ class UserInfoForm extends Component {
     };
 
     editAddress = (record) => {
-        console.log(record)
         this.setState({userAddressOnEditing:{...record}})
         this.showDrawer()
     }
 
     addAddress = () => {
-        this.setState({userAddressOnEditing: null,},() => {this.showDrawer()})
+        this.setState({userAddressOnEditing: null},() => {this.showDrawer()})
     }
 
     showDrawer = () => {
@@ -68,26 +67,23 @@ class UserInfoForm extends Component {
     }
 
     componentDidMount() {
-        console.log('componentDidMount',this.userId)
     }
    
     handleSubmit = (e) => {
-        const details = this.state.saleStocks
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            var requestBody = {...values,...{"details":details}}
-            Http.postJson("/manage/user/edit",requestBody).then((result => {
-                console.log(result)
-            }))
+            var requestBody = {...values}
+            Http.postJson("/manage/user/edit",requestBody).then(() => {
+                this.props.history.push("/usermanage/list")
+            })
           }
         });
     }
 
     afterCommit = (params) => {
         var requestBody = {...params,...{"userId":this.state.userInfo.id}}
-        console.log("afterCommit",requestBody)
         Http.postJson("/manage/user/address/edit",requestBody).then((result) => {
-            this.setState({userAddressOnEditing:{}})
+            this.closeDrawer()
             this.queryUserAddresses()
         })
     }
@@ -101,7 +97,6 @@ class UserInfoForm extends Component {
 
     render() {
         const {userAddressOnEditing,userInfo,addresses} = this.state
-        console.log("user addresses userAddressOnEditing.. ",userAddressOnEditing)
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 18 },
@@ -149,7 +144,7 @@ class UserInfoForm extends Component {
                 </FormItem>
                 <FormItem {...formItemLayout} label="微信ID" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('wechatId', {
-                        rules: [{ required: true, message: 'Please input your email!' }],
+                        rules: [{ required: false, message: 'Please input your email!' }],
                         initialValue: userInfo.wechatId
                     })(
                         <Input disabled/>
@@ -157,10 +152,10 @@ class UserInfoForm extends Component {
                 </FormItem>
                    
                 <Divider orientation="left">配送地址 :</Divider>
-                <Button type="primary" onClick={this.showDrawer}>
+                <Button type="primary" onClick={this.addAddress}>
                     <Icon type="plus" /> 新增地址
                 </Button>
-                <DrawerForm afterCommit={this.afterCommit} dataOnEditing={userAddressOnEditing} visible={this.state.drawerVisible}></DrawerForm>
+                <DrawerForm afterCommit={this.afterCommit} afterClose={this.closeDrawer} dataOnEditing={userAddressOnEditing} visible={this.state.drawerVisible}></DrawerForm>
                 <Table
                     rowKey={record => record.id}
                     bordered
@@ -171,7 +166,7 @@ class UserInfoForm extends Component {
                 <Row>
                     <Col offset={5} span={16}>
                         <div style={{"textAlign":"right"}}>
-                            <Button type="primary" htmlType="submit">保存</Button>   
+                            <Button type="primary" onClick={this.handleSubmit}>保存</Button>   
                         </div>
                     </Col>
                 </Row>

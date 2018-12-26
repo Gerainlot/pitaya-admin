@@ -7,14 +7,15 @@ class DrawerForm extends React.Component {
     state = { 
       visible: false,
       afterCommit: () => {},
+      afterClose: () => {},
       dataOnEditing:{}
     };
 
     componentWillReceiveProps(nextProps) {
       this.setState({
         afterCommit:nextProps.afterCommit,
-        visible:nextProps.visible,
-        dataOnEditing:nextProps.dataOnEditing})
+        afterClose: nextProps.afterClose,
+        visible:nextProps.visible})
     }
 
     handleSave = (e) => {
@@ -27,12 +28,12 @@ class DrawerForm extends React.Component {
     }
 
     onClose = () => {
-      this.setState({visible:false,dataOnEditing:null})
+      this.setState({visible:false})
+      this.state.afterClose()
     }
   
     render() {
       const { getFieldDecorator } = this.props.form;
-      const {dataOnEditing} = this.props
       return (
         <div>
           <Drawer
@@ -48,17 +49,20 @@ class DrawerForm extends React.Component {
           >
             <Form layout="vertical" hideRequiredMark>
              
+                  <Form.Item hidden>
+                    {getFieldDecorator('id', {
+                      rules: [{ required: false, message: '请输入收件人姓名' }],
+                    })(<Input hidden/>)}
+                  </Form.Item>
                   <Form.Item label="收件人">
                     {getFieldDecorator('name', {
                       rules: [{ required: true, message: '请输入收件人姓名' }],
-                      initialValue:dataOnEditing?dataOnEditing.name:""
                     })(<Input placeholder="请输入收件人姓名" />)}
                   </Form.Item>
               
                   <Form.Item label="手机号">
                     {getFieldDecorator('phoneNo', {
                       rules: [{ required: true, message: '请输入手机号' }],
-                      initialValue:dataOnEditing?dataOnEditing.phoneNo:""
                     })(
                       <Input
                         placeholder="请输入手机号"
@@ -74,8 +78,7 @@ class DrawerForm extends React.Component {
                           message: '请输入详细的收件地址',
                         },
                       ],
-                      initialValue:dataOnEditing?dataOnEditing.address:""
-                    })(<Input.TextArea rows={4} placeholder="请输入详细的收件地址 xxx省xxx市xxx区/县xxx 街道门牌号" />)}
+                    })(<Input.TextArea rows={4} placeholder="请输入详细的收件地址 xx省xx市xx区/县xx街道门牌号" />)}
                   </Form.Item>
             </Form>
             <div
@@ -91,10 +94,10 @@ class DrawerForm extends React.Component {
               }}
             >
               <Button onClick={this.onClose} style={{ marginRight: 8 }}>
-                Cancel
+                取消
               </Button>
               <Button onClick={this.handleSave} type="primary">
-                Submit
+                保存
               </Button>
             </div>
           </Drawer>
@@ -103,6 +106,29 @@ class DrawerForm extends React.Component {
     }
   }
   
-  export default DrawerForm = Form.create()(DrawerForm);
+  export default DrawerForm = Form.create({
+    onFieldsChange(props, changedFields) {
+      
+    },
+    mapPropsToFields(props) {
+      return {
+        id: Form.createFormField({
+          value: props.dataOnEditing?props.dataOnEditing.id:0,
+        }),
+        name: Form.createFormField({
+          value: props.dataOnEditing?props.dataOnEditing.name:"",
+        }),
+        phoneNo: Form.createFormField({
+          value: props.dataOnEditing?props.dataOnEditing.phoneNo:"",
+        }),
+        address: Form.createFormField({
+          value: props.dataOnEditing?props.dataOnEditing.address:"",
+        }),
+      };
+    },
+    onValuesChange(_, values) {
+      
+    },
+  })(DrawerForm);
   
   

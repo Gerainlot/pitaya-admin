@@ -16,7 +16,7 @@ class UserInfo extends Component {
         const {userInfo,userAddresses} = this.props
         return (
             <Fragment>
-                <UserInfoForm info={userInfo.toJS()} addresses={userAddresses && userAddresses.toJS()}></UserInfoForm>
+                <UserInfoForm {...this.props} info={userInfo.toJS()} addresses={userAddresses && userAddresses.toJS()}></UserInfoForm>
             </Fragment>
         )
     }
