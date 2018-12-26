@@ -11,21 +11,19 @@ class UserInfo extends Component {
         getInfo(this.props.match.params.id)
         getAddresses(this.props.match.params.id)
     }
-    //点击保存
-    handleSave= ()=>{this.formRef.handleSubmit()}
+    
     render() {
-        const {userInfo} = this.props
+        const {userInfo,userAddresses} = this.props
         return (
             <Fragment>
-                <UserInfoForm info={userInfo.toJS()}></UserInfoForm>
-                {/* <Button onClick={()=>{this.handleSave()}}>{this.props.location.pathname === "/goodsmanage/addgoods"?"新增":"保存"}</Button> */}
+                <UserInfoForm info={userInfo.toJS()} addresses={userAddresses && userAddresses.toJS()}></UserInfoForm>
             </Fragment>
         )
     }
 }
 const mapStateToProps = (state) => ({
     userInfo: state.getIn(["user","userInfoData"]),
-    userAddresses : state.getIn(["user","addresses"])
+    userAddresses : state.getIn(["user","addressesData"])
 })
 const mapDispatchToProps = (dispatch) => ({
     getInfo(id){

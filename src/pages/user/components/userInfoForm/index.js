@@ -1,11 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import Http from '../../../../http/http'
-import { Form, Input, Button ,Divider,Icon, Select,Modal,Row,Col} from "antd";
-import EditableTable from "../../components/table/editable_table";
+import { Form, Input, Table,Button ,Divider,Row,Col,Icon} from "antd";
 import DrawerForm from "./drawer_form"
-
 const FormItem = Form.Item;
-const Option = Select.Option;
 
 class UserInfoForm extends Component {
 
@@ -26,18 +23,52 @@ class UserInfoForm extends Component {
         key: 'address',
         dataIndex: 'address',
         editable: true,
+      }, {
+        title: 'Action',
+        key: 'action',
+        render: (text, record) => (
+          <span>
+            <Button onClick={(e) => this.editAddress(record)}>编辑</Button>
+          </span>
+        ),
       }];
 
     state = {
-        userBasicInfo : {},
+        userInfo : {},
+        addresses : [],
+        drawerVisible : false,
+        userAddressOnEditing : {}
+    };
+
+    editAddress = (record) => {
+        console.log(record)
+        this.setState({userAddressOnEditing:{...record}})
+        this.showDrawer()
+    }
+
+    addAddress = () => {
+        this.setState({userAddressOnEditing: null,},() => {this.showDrawer()})
+    }
+
+    showDrawer = () => {
+        this.setState({
+            drawerVisible: true,
+        });
+    };
+    
+    closeDrawer = () => {
+        this.setState({
+            drawerVisible: false,
+            userAddressOnEditing: null
+        });
     };
 
     componentWillReceiveProps(nextProps) {
-        this.setState({userBasicInfo: nextProps.info})
+        this.setState({userInfo:nextProps.info,addresses:nextProps.addresses})
     }
 
     componentDidMount() {
-        console.log("componentDidMount...")
+        console.log('componentDidMount',this.userId)
     }
    
     handleSubmit = (e) => {
@@ -52,8 +83,25 @@ class UserInfoForm extends Component {
         });
     }
 
+    afterCommit = (params) => {
+        var requestBody = {...params,...{"userId":this.state.userInfo.id}}
+        console.log("afterCommit",requestBody)
+        Http.postJson("/manage/user/address/edit",requestBody).then((result) => {
+            this.setState({userAddressOnEditing:{}})
+            this.queryUserAddresses()
+        })
+    }
+
+    queryUserAddresses = () => {
+        Http.get('/manage/user/address/list', {"userId":this.state.userInfo.id}).then((res) => {
+            const result = res.data.address;
+			this.setState({addresses:result})
+		})
+    }
+
     render() {
-        const {userBasicInfo} = this.state
+        const {userAddressOnEditing,userInfo,addresses} = this.state
+        console.log("user addresses userAddressOnEditing.. ",userAddressOnEditing)
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 18 },
@@ -61,12 +109,12 @@ class UserInfoForm extends Component {
         const { getFieldDecorator } = this.props.form;
         return(
             <Fragment>
-                {userBasicInfo && <Form onSubmit={this.handleSubmit}>
+                {userInfo && <Form onSubmit={this.handleSubmit}>
                 <Divider orientation="left">基本信息</Divider>
                 <FormItem {...formItemLayout} label="用户ID" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('id', {
                         rules: [{ required: true, message: 'Please input your note!' }],
-                        initialValue: userBasicInfo.id
+                        initialValue: userInfo.id
                     })(
                         <Input disabled/>
                     )}
@@ -74,7 +122,7 @@ class UserInfoForm extends Component {
                 <FormItem {...formItemLayout} label="姓名" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('name', {
                         rules: [{ required: true, message: 'Please input your name!' }],
-                        initialValue: userBasicInfo.name
+                        initialValue: userInfo.name
                     })(
                         <Input />
                     )}
@@ -82,7 +130,7 @@ class UserInfoForm extends Component {
                 <FormItem {...formItemLayout} label="手机号" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('phoneNo', {
                         rules: [{ required: true, message: 'Please input your name!' }],
-                        initialValue: userBasicInfo.phoneNo
+                        initialValue: userInfo.phoneNo
                     })(
                         <Input />
                     )}
@@ -94,7 +142,7 @@ class UserInfoForm extends Component {
                             }, {
                             required: true, message: 'Please input your E-mail!',
                         }],
-                        initialValue: userBasicInfo.email
+                        initialValue: userInfo.email
                     })(
                         <Input/>
                     )}
@@ -102,15 +150,24 @@ class UserInfoForm extends Component {
                 <FormItem {...formItemLayout} label="微信ID" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('wechatId', {
                         rules: [{ required: true, message: 'Please input your email!' }],
-                        initialValue: userBasicInfo.wechatId
+                        initialValue: userInfo.wechatId
                     })(
                         <Input disabled/>
                     )}
                 </FormItem>
                    
                 <Divider orientation="left">配送地址 :</Divider>
-                <DrawerForm></DrawerForm>
-                <EditableTable columns={this.columns}></EditableTable>
+                <Button type="primary" onClick={this.showDrawer}>
+                    <Icon type="plus" /> 新增地址
+                </Button>
+                <DrawerForm afterCommit={this.afterCommit} dataOnEditing={userAddressOnEditing} visible={this.state.drawerVisible}></DrawerForm>
+                <Table
+                    rowKey={record => record.id}
+                    bordered
+                    dataSource={addresses}
+                    columns={this.columns}
+                    pagination={false}
+                />
                 <Row>
                     <Col offset={5} span={16}>
                         <div style={{"textAlign":"right"}}>
@@ -126,5 +183,4 @@ class UserInfoForm extends Component {
 }
 
 const WrappedUserInfoForm = Form.create()(UserInfoForm)
-
 export default WrappedUserInfoForm;

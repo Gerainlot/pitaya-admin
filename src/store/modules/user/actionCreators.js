@@ -56,7 +56,7 @@ export const queryUserAddresses = (params) => {
     
     return (dispatch) => {
 		Http.get('/manage/user/address/list', params).then((res) => {
-            const result = res.data;
+            const result = res.data.address;
 			result && dispatch(updateUserAddressesData(result))
 		})
 	}

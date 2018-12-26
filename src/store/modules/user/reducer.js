@@ -10,7 +10,8 @@ const defaultState = fromJS({
         pageSize: 0,
         total: 0,
     },
-    userInfoData : {}
+    userInfoData : {},
+    addressesData: []
 });
 
 export default (state = defaultState, action) => {
@@ -21,6 +22,8 @@ export default (state = defaultState, action) => {
             return state.set("userTableData", fromJS(action.value))
         case constants.updateStoreUserInfoData:
             return state.set("userInfoData",fromJS(action.value))
+        case constants.updateStoreUserAddressesData:
+            return state.set("addressesData",fromJS(action.value))
 		default:
             return state;         
 	}
