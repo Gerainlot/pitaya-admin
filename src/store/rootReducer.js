@@ -2,17 +2,19 @@ import { combineReducers } from 'redux-immutable';
 import { reducer as userReducer } from "./modules/user";
 import { reducer as goodsReducer } from "./modules/goods";
 import { reducer as saleReducer } from "./modules/sale_order";
+import {reducer as specificationReducer} from "./modules/specification"
+import {reducer as attributeReducer} from "./modules/attribute"
+import {reducer as categoryReducer} from "./modules/category"
+import {reducer as supplierReducer} from "./modules/supplier"
 
 const reducers = combineReducers({
-    //用户模块
     user: userReducer,
-    //商品模块
     goods: goodsReducer,
     sale: saleReducer,
-    // //员工管理模块
-    // staffManage: staffManageReducer,
-    // //企业层级模块
-    // corpHierarchy: corpHierarchyReducer,
+    specification : specificationReducer,
+    attribute : attributeReducer,
+    category : categoryReducer,
+    supplier : supplierReducer,
 });
 
 export default reducers;

@@ -61,7 +61,10 @@
     constructor(props) {
         super(props);
         this.writeBackFunc = this.props.writeBackFunc
-        this.state = { data: this.props.dataSource, editingKey: '' };
+        this.state = { 
+          data: this.props.dataSource, 
+          editingKey: '' 
+        };
         this.columns = [...this.props.columns, {
             title: 'operation',
             dataIndex: 'operation',

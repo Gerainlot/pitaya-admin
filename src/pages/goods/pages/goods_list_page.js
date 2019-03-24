@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from "react-redux";
 import { Link, withRouter } from 'react-router-dom';
-import GoodsTable from "../../components/goodsTable";
-import { goodsTableDataPageParams } from "../../../../utils/pageParams";
-import { actionCreators as goodsActionCreators } from "../../../../store/modules/goods";
+import GoodsTable from "../components/goodsTable";
+import { goodsTableDataPageParams } from "../../../utils/pageParams";
+import { actionCreators as goodsActionCreators } from "../../../store/modules/goods";
+import { Button } from 'antd';
 
 
 class GoodsList extends Component {
@@ -17,7 +18,9 @@ class GoodsList extends Component {
         const { getGoodsTableData } = this.props;
         return (
             <Fragment>
-                <Link to="/goodsmanage/addgoods">新增按钮</Link>
+                <Link to="/goodsmanage/addgoods">
+                    <Button type="primary">新增商品 </Button>
+                </Link>
                 <GoodsTable
                     tableData={goodsTableData.toJS()}
                     pagination={goodsTableDataPagination}

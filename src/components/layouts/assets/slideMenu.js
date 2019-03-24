@@ -13,7 +13,7 @@ export default
         title : '商品列表'
     }]
 }, {
-    key   : '/suppliermanage',
+    key   : '/supplier/list',
     title : '供应商管理',
     icon  : 'team',
 }, {
@@ -40,4 +40,22 @@ export default
     key   : '/developconfig',
     title : '基础配置',
     icon  : 'team',
+},{
+    key   : '/datamanage',
+    title : '数据管理',
+    icon  : 'team',
+    list  : [{
+        key   : '/specification',
+        title : '规格管理',
+        icon  : 'team',
+    },{
+        key   : '/attribute',
+        title : '属性管理',
+        icon  : 'team',
+    },
+    {
+        key   : '/category',
+        title : '商品分类',
+        icon  : 'team',
+    }]
 }]

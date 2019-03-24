@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import { Upload, Icon, Modal } from 'antd';
-import config from "../../../../config";
-
-
 
 class PicturesWall extends Component {
     state = {
@@ -11,7 +8,7 @@ class PicturesWall extends Component {
         fileList: []
     };
     componentWillReceiveProps(nextProps){
-        let fileList = nextProps.picsList.map((item)=>{
+        let fileList = nextProps.pictures.map((item)=>{
             if(!item.uid){
                 item.uid = item.id
             }
@@ -40,6 +37,7 @@ class PicturesWall extends Component {
         fileList = fileList.map((file) => {
             if (file.response) {
               // Component will show file.url as link
+              
               file.url = file.response.data[0].path;
               file.id = file.response.data[0].id;
             }
@@ -54,7 +52,7 @@ class PicturesWall extends Component {
         });
         this.setState({ 
             fileList 
-        },()=>{
+        },()=> {
             this.props.changePicsList(fileList)
         });
     }
@@ -75,7 +73,7 @@ class PicturesWall extends Component {
         return (
             <div className="clearfix">
                 <Upload
-                    action={config.dev.apiRootURL+uploadUrl}
+                    action={uploadUrl}
                     multiple={true}
                     listType="picture-card"
                     fileList={fileList}

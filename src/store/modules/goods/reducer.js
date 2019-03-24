@@ -18,7 +18,9 @@ const defaultState = fromJS({
     //供应商列表
     supplierList: [],
     //商品图片列表
-    goodsPicsList: []
+    goodsPicsList: [],
+    // 商品分类列表
+    categoryList : []
 });
 
 export default (state = defaultState, action) => {
@@ -46,6 +48,8 @@ export default (state = defaultState, action) => {
             return state.set("supplierList", action.value.suppliers?fromJS(action.value.suppliers):fromJS([]))
         case constants.updateGoodsPicsList:
             return state.set("goodsPicsList", action.value.pictures?fromJS(action.value.pictures):fromJS([]))
+        case constants.action_update_category_list:
+            return state.set("categoryList",action.value?fromJS(action.value):fromJS([]))
 		default:
             return state;         
 	}

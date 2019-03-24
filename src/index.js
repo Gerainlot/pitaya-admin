@@ -8,8 +8,6 @@ import Routers from "./routers";
 import "antd/dist/antd.css";
 import "./styles/common.scss";
 
-
-//区别生产环境和测试环境 传递不同config
 let conf = config.prod
 if (process.env.NODE_ENV === 'development') {
     conf = config.dev

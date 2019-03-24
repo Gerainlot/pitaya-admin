@@ -1,12 +1,6 @@
 import React, { Component, Fragment } from 'react';
-// import { connect } from "react-redux";
 import Http from '../../../../http/http'
 import { Form, Input, Button ,Divider,Table, Select,Modal,} from "antd";
-import moment from 'moment';
-// import { fromJS } from "immutable";
-// import classnames from "classnames";
-// import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
-// import styles from "./index.module.scss";
 import EditableTable from "./editable_table";
 
 const FormItem = Form.Item;

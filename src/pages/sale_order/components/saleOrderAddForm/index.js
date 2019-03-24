@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import Http from '../../../../http/http'
-import { Form, Input, Button ,Divider,Table, Select,Modal,DatePicker,TimePicker} from "antd";
-import moment from 'moment';
+import { Form, Input, Button ,Divider,Table, Select,Modal} from "antd";
 import EditableTable from "./editable_table";
 
 const FormItem = Form.Item;

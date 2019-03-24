@@ -35,46 +35,48 @@ class GoodsTable extends Component {
                     key="id"
                 />
                 <Column
-                    title="name"
+                    title="名称"
                     dataIndex="name"
                     key="name"
                 />
                 <Column
-                    title="category"
+                    title="分类"
                     dataIndex="category"
                     key="category"
                 />
                 <Column
-                    title="producingArea"
+                    title="产地"
                     dataIndex="producingArea"
                     key="producingArea"
                 />
                 <Column
-                    title="description"
+                    title="描述"
                     dataIndex="description"
                     key="description"
                 />
                 <Column
-                    title="createTime"
+                    title="创建时间"
                     dataIndex="createTime"
                     key="createTime"
                 />
                 <Column
-                    title="updateTime"
+                    title="更新时间"
                     dataIndex="updateTime"
                     key="updateTime"
                 />
                 <Column
-                    title="supplierId"
+                    title="供应商"
                     dataIndex="supplierId"
                     key="supplierId"
                 />
                 <Column
-                    title="Action"
+                    title="操作"
                     key="action"
                     render={(text, record) => (
                         <Fragment>
-                            <Link to={`/goodsmanage/goodsInfo/${record.id}`}>编辑商品信息</Link>
+                            <Link to={`/goodsmanage/goodsInfo/${record.id}`}>编辑</Link>
+                            <Divider type="vertical" />
+                            <Link to={`/goodsmanage/stock/info/${record.id}/${record.supplierId}`}>库存</Link>
                             <Divider type="vertical" />
                             <span onClick={this.handleDelete.bind(this, record.id, 100)}>删除</span>
                         </Fragment>
