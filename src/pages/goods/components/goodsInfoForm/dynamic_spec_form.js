@@ -2,7 +2,7 @@ import {
     Form, Input, Icon, Button, Col, Row,Select,
   } from 'antd';
 import React from "react"
-import {api_specifications_all} from '../../../../apis/api'
+import {api_specifications_all} from '../../../../api'
 import SpecificationAvatar from "./spec_picture_wall"
 import Http from '../../../../http/http'
 import { connect } from "react-redux";

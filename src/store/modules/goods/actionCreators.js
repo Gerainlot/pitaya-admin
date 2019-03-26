@@ -1,7 +1,7 @@
 import * as constants from './constants';
 import Http from "../../../http/http";
 import {api_categories_all,api_goods_stock_edit,api_supplier_all,
-api_goods_edit} from "../../../apis/api"
+api_goods_edit} from "../../../api"
 
 
 

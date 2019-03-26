@@ -2,24 +2,21 @@ import React, { Component } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
 import Layouts from "../components/layouts";
 import Login from "../pages/login";
-import {connect} from "react-redux"
-
+import TokenManager from '../http/token_manager'
 
 class Routers extends Component {
 
+    isLogin = () => {
+       const {accessToken} =  TokenManager.getTokens()
+       if (accessToken) {
+           console.log("you have already login access token is ",accessToken)
+           return true
+       }
+       return false
+    }
+
     render(){
-        const {currentUser} = this.props
-        // return currentUser? (
-        //     <Switch>
-        //         {/* 登陆页面 */}
-        //         <Route path="/login" component={ Login }/>
-        //         {/* 主页面 */}
-        //         <Route path='/' component={ Layouts } />
-        //         {/* 404页面 */}
-        //         <Redirect to='/404' />
-        //     </Switch>
-        // ) : (<Login></Login>)
-        return (
+        return this.isLogin() ? (
             <Switch>
                 {/* 登陆页面 */}
                 <Route path="/login" component={ Login }/>
@@ -28,16 +25,9 @@ class Routers extends Component {
                 {/* 404页面 */}
                 <Redirect to='/404' />
             </Switch>
-        )
+        ) : (<Login></Login>)
+        
     }
 }
 
-const mapStateToProps = (state) => ({
-    currentUser: state.getIn(["user","currentUser"]),
-})
-
-const mapDispatchToProps = (dispatch) => ({
-   
-})
-
-export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Routers))
+export default withRouter(Routers)

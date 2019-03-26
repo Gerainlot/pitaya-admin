@@ -5,7 +5,7 @@ import { EditorState, convertToRaw ,ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from '../../../../../node_modules/html-to-draftjs';
-import {api_goods_picture_upload} from "../../../../apis/api"
+import {api_goods_picture_upload} from "../../../../api"
 require('../../../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css')
 require('./goods_editor.css')
 

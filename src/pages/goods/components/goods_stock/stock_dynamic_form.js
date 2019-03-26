@@ -1,6 +1,6 @@
 
 import React from "react"
-import {api_specifications_all} from '../../../../apis/api'
+import {api_specifications_all} from '../../../../api'
 import Http from '../../../../http/http'
 import { connect } from "react-redux";
 import {

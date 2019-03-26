@@ -1,8 +1,6 @@
 import * as constants from './constants';
 import Http from "../../../http/http";
 
-
-
 //登录用户
 export const loginUser = (params) => {
     let { user, password } = params;
@@ -12,7 +10,7 @@ export const loginUser = (params) => {
             password
         }).then((res) => {
 			const result = res.data.token;
-			result&&dispatch(updateCurrentUser(result))
+			result && dispatch(updateCurrentUser(result))
 		})
 	}
 }

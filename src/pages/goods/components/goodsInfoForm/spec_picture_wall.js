@@ -3,7 +3,7 @@ import {
 } from 'antd';
     
 import React from "react"
-import {api_goods_picture_upload} from '../../../../apis/api'
+import {api_goods_picture_upload} from '../../../../api'
 
 export default class PicturesWall extends React.Component {
     state = {

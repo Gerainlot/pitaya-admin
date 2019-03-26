@@ -1,6 +1,15 @@
 .loginform {
-    max-width: 300px;
+    max-width: 360px;
+    margin: 30% auto !important;
 }
+
 .loginformbutton {
     width: 100%;
+}
+
+.login_center {
+    margin: auto;
+    width: 50%;
+    // border: 3px solid lightskyblue;
+    padding: 10px;
 }

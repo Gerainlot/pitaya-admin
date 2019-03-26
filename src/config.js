@@ -4,8 +4,8 @@ const config = {
         basename: '/dev',
     },
     prod: {
-        apiRootURL: 'http://localhost:8090/',
-        basename: '/prod',
+        apiRootURL: 'https://www.geluxiya.com/',
+        basename: '/coco',
     }
 }
 

@@ -1,10 +1,10 @@
-import LocalStorage from "./localStorage"; 
+import LocalStorage from "./local_storage"; 
 
-const accessTokenKey = "m-at"
-const refreshTokenKey = "m-rt"
-const expireTimeKey = "m-ex" // 另一个共享 token 的项目的 key
+const accessTokenKey = "access_token"
+const refreshTokenKey = "refresh_token"
+const currentUserKey = "current_user"
 
-export default class TokenManager {
+class TokenManager {
     constructor() {
         this.storage = new LocalStorage()
     }
@@ -18,8 +18,10 @@ export default class TokenManager {
     setTokens(tokens) {
         this.storage.setItem(accessTokenKey, tokens.accessToken)
         this.storage.setItem(refreshTokenKey, tokens.refreshToken)
-        const now = new Date().getTime().toString()
-        this.storage.setItem(expireTimeKey, now)
+    }
+
+    clearAccessToken() {
+        this.storage.removeItem(accessTokenKey)
     }
 
     setAccessToken(token) {
@@ -29,4 +31,10 @@ export default class TokenManager {
     setRefreshToken(token) {
         this.storage.setItem(refreshTokenKey, token)
     }
+
+    setUserInfo(token) {
+        this.storage.setItem(currentUserKey,{name:token.name,phoneNo:token.phoneNo,email:token.email})
+    }
 }
+
+export default new TokenManager()

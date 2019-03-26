@@ -4,7 +4,7 @@ import { actionCreators as goodsActionCreators } from "../../../../store/modules
 import { fromJS } from "immutable";
 import { Form, Input, Select, Divider } from "antd";
 import PicturesWall from "./goods_picture_wall";
-import {api_goods_picture_upload} from '../../../../apis/api'
+import {api_goods_picture_upload} from '../../../../api'
 
 class GoodsInfoForm extends Component {
 

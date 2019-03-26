@@ -4,7 +4,7 @@ import {
 	api_supplier_list,
 	api_supplier_info,
 	api_supplier_edit,
-} from "../../../apis/api"
+} from "../../../api"
 
 export const action_set_suppliers= "supplier.table.update";
 export const action_set_supplier_info= "supplier.info.update";

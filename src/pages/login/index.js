@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Form, Icon, Input, Button } from 'antd';
-import { actionCreators as userActionCreators  } from "../../store/modules/user";
 import styles from "./index.module.scss";
+import {api_user_login} from "../../api"
+import Http from '../../http/http'
+import TokenManager from '../../http/token_manager'
 
 const FormItem = Form.Item;
 
@@ -39,36 +40,41 @@ class NormalLoginForm extends Component {
                 </FormItem>
                 <FormItem>
                     <Button type="primary" htmlType="submit" className={styles.loginformbutton}>
-                        Log in
+                        登录
                     </Button>
                 </FormItem>
             </Form>
         );
     }
 }
+
 const WrappedNormalLoginForm = Form.create()(NormalLoginForm);
 
-
 class Login extends Component {
+
+    login = (params) => {
+        let { user, password } = params;
+		Http.postJson(api_user_login, {
+            user,
+            password
+        }).then((res) => {
+            const token = res.data.token;
+            TokenManager.setTokens(token)
+            this.props.history.push("/")
+		})
+	}
+
     render() {
-        const { loginUser } = this.props;
         return (
             <Fragment>
-                <WrappedNormalLoginForm
-                    onLoginSubmit={loginUser} 
-                ></WrappedNormalLoginForm>
+                <div className={styles.login_center}>
+                    <WrappedNormalLoginForm
+                        onLoginSubmit={this.login} 
+                    />
+                </div>
             </Fragment>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-    selectedCorp: state.getIn(["corpManage", "selectedCorp"]),
-})
-const mapDispatchToProps = (dispatch) => ({
-    //登陆用户
-    loginUser(params){
-        dispatch(userActionCreators.loginUser(params))
-    },
-})
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default withRouter(Login);
