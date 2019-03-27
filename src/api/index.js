@@ -14,3 +14,6 @@ export const api_supplier_info = "manage/supplier/info"
 
 // API-User
 export const api_user_login = "manage/login"
+
+// API-订单
+export const api_sale_order_edit = "manage/sale/order/edit"

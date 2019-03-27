@@ -2,88 +2,30 @@ import React, { Component, Fragment } from 'react';
 import Http from '../../../../http/http'
 import { Form, Input, Button ,Divider,Table, Select,Modal,} from "antd";
 import EditableTable from "./editable_table";
+import {api_sale_order_edit} from "../../../../api"
+import {stock_headers,sale_detail_columns} from "./defs"
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 
 class SaleOrderInfoForm extends Component {
 
-    stock_headers = [{
-        title: '库存ID',
-        dataIndex: 'id',
-        key: 'id',
-      },{
-        title: '成本单价',
-        dataIndex: 'costUnitPrice',
-        key: 'costUnitPrice',
-      },{
-        title: '销售单价',
-        dataIndex: 'saleUnitPrice',
-        key: 'saleUnitPrice',
-      },{
-        title: '库存名称',
-        dataIndex: 'name',
-        key: 'name',
-      },{
-        title: '剩余库存',
-        dataIndex: 'availableQuantity',
-        key: 'availableQuantity',
-      },{
-        title: '规格',
-        dataIndex: 'specification',
-        key: 'specification',
-      },
-      {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-      },]
-
-    columns = [{
-        title: 'ID',
-        dataIndex: 'id',
-        key: 'id',
-        render: text => <a href="javascript:;">{text}</a>,
-      }, {
-        title: '商品ID',
-        dataIndex: 'goodsId',
-        key: 'goodsId',
-      }, {
-        title: '商品名称',
-        dataIndex: 'goodsName',
-        key: 'goodsName',
-      }, {
-        title: '数量',
-        key: 'goodsQuantity',
-        dataIndex: 'goodsQuantity',
-        editable: true,
-      }, 
-      {
-        title: '成本单价',
-        key: 'costUnitPrice',
-        dataIndex: 'costUnitPrice',
-      },
-      {
-        title: '销售单价',
-        key: 'saleUnitPrice',
-        dataIndex: 'saleUnitPrice',
-        editable: true,
-      },
-      {
-        title: '备注',
-        key: 'remark',
-        dataIndex: 'remark',
-        editable: true,
-      }];
-
     state = {
         info : {},
         stockModalVisible : false,
         loadedStocks:[],
         selectedStocks:[],
-        saleStocks:[]
+        saleDetails:[]
     };
    
+    componentWillReceiveProps(nextProps) {
+        this.setState({info: nextProps.info,saleDetails:nextProps.info.items})
+    }
+
+    componentDidMount() {
+        console.log("componentDidMount...")
+    }
+
     loadStockData(){
         Http.postJson('/manage/stock/list', {}).then((res) => {
             this.setState({loadedStocks:res.data})
@@ -91,7 +33,6 @@ class SaleOrderInfoForm extends Component {
     }
 
     onStockSelected(selectedRows){
-        
         var slectedStocks = selectedRows.map(function(row) { 
             var ss = {};
             ss.id = 0;
@@ -108,8 +49,8 @@ class SaleOrderInfoForm extends Component {
 
     addSelectedStocks2SaleStocks() {
         this.setStockModalVisible(false);
-        this.setState({saleStocks:[...this.state.saleStocks,...this.state.selectedStocks]},() => {
-            console.log(this.state.saleStocks)
+        this.setState({saleDetails:[...this.state.saleDetails,...this.state.selectedStocks]},() => {
+            console.log(this.state.saleDetails)
         })
         
     }
@@ -121,25 +62,20 @@ class SaleOrderInfoForm extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({info: nextProps.info,saleStocks:nextProps.info.items})
-    }
-
-    componentDidMount() {
-        console.log("componentDidMount...")
-    }
-    writePropBack = (data) => {
+    setSaleDetails = (data) => {
         this.setState({
-            saleStocks: data
+            saleDetails: data
         })
     }
 
     handleSubmit = (e) => {
-        const details = this.state.saleStocks
-        this.props.form.validateFields((err, values) => {
+        e.preventDefault();
+        const details = this.state.saleDetails
+        const {form} = this.props
+        form.validateFields((err, values) => {
           if (!err) {
             var requestBody = {...values,...{"details":details}}
-            Http.postJson("/manage/sale/order/edit",requestBody).then((result => {
+            Http.postJson(api_sale_order_edit,requestBody).then((result => {
                 console.log(result)
             }))
           }
@@ -147,7 +83,7 @@ class SaleOrderInfoForm extends Component {
     }
 
     render() {
-        const {info,saleStocks} = this.state
+        const {info,saleDetails} = this.state
         const formItemLayout = {
             labelCol: { span: 6 },
             wrapperCol: { span: 18 },
@@ -163,6 +99,10 @@ class SaleOrderInfoForm extends Component {
             <Fragment>
                 {info.order && <Form onSubmit={this.handleSubmit}>
                 <Divider orientation="left">基本信息</Divider>
+                {
+                    getFieldDecorator('id', {
+                    initialValue: info.order.id
+                })}
                 <FormItem {...formItemLayout} label="订单号" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }}>
                     {getFieldDecorator('orderNo', {
                         rules: [{ required: true, message: 'Please input your note!' }],
@@ -244,12 +184,12 @@ class SaleOrderInfoForm extends Component {
                     <FormItem label="收件地址" labelCol={{ span: 5 }} wrapperCol={{ span: 12 }} name="address">
                     {getFieldDecorator('address', {
                             rules: [{ required: true, message: '请输入收件人地址' }],
-                            initialValue: info.order.receiver
+                            initialValue: info.order.address
                         })(
                             <Input/>
                         )}
                     </FormItem>
-                    <Divider orientation="left">商品明细:</Divider>
+                    <Divider orientation="left">订单明细:</Divider>
                     <Button type="primary" onClick={() => this.setStockModalVisible(true)}>添加商品</Button>
                     <Modal
                         title="选择商品"
@@ -264,18 +204,18 @@ class SaleOrderInfoForm extends Component {
                             rowKey={record => record.id}
                             bordered
                             dataSource={this.state.loadedStocks}
-                            columns={this.stock_headers}
+                            columns={stock_headers}
                             pagination={false}
                             >
                         </Table>
                     </Modal>
                     {
-                        saleStocks && 
+                        saleDetails && 
                         
                         <EditableTable 
-                            columns={this.columns} 
-                            dataSource={saleStocks}
-                            writeBackFunc={this.writePropBack}
+                            columns={sale_detail_columns} 
+                            dataSource={saleDetails}
+                            writeBackFunc={this.setSaleDetails}
                         ></EditableTable>
                     }
                     <Divider orientation="left">付款信息:</Divider>

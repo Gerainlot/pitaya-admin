@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, withRouter } from 'react-router-dom';
 import { Layout } from "antd";
-import LayoutHeader from "../layoutHeader";
+import LayoutHeader from "../head";
 import styles from "./index.module.scss";
 
 import GoodsManageLayouts from "../../../../pages/goods";

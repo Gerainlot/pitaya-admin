@@ -1,28 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from "react-redux";
-import { Link, withRouter } from 'react-router-dom';
 import SaleOrderTable from "../../components/saleOrderTable";
-import { saleOrderTableDataPageParams } from "../../../../utils/pageParams";
+import { defaultPagination } from "../../../../utils/pageParams";
 import { actionCreators as saleOrderActionCreator } from "../../../../store/modules/sale_order";
-import { Button } from 'antd';
+import SearchFrom from "../../components/search_form"
 
 
 class SaleOrderList extends Component {
     componentDidMount(){
         //获取销售订单列表数据
-        
         const { getSaleOrderTableData } = this.props;
-        getSaleOrderTableData(saleOrderTableDataPageParams())
-        console.log("获取销售订单列表数据...")
+        getSaleOrderTableData(defaultPagination())
     }
     render() {
         const { saleOrderTableData, saleOrderTableDataPagination } = this.props;
         const { getSaleOrderTableData } = this.props;
         return (
             <Fragment>
-                <Link to="/salemanage/add">
-                    <Button type="primary">新增订单</Button>
-                </Link>
+                
+                <SearchFrom></SearchFrom>
                 <SaleOrderTable
                     tableData={saleOrderTableData.toJS()}
                     pagination={saleOrderTableDataPagination}
@@ -42,4 +38,4 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(saleOrderActionCreator.querySaleOrderList(params))
     },
 })
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaleOrderList));
+export default connect(mapStateToProps, mapDispatchToProps)(SaleOrderList);

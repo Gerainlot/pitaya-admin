@@ -1,8 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from "react-redux";
-import { withRouter } from 'react-router-dom';
 import SaleOrderInfoForm from "../../components/saleOrderInfoForm";
-import { Button } from "antd";
 import { actionCreators as saleActionCreator } from "../../../../store/modules/sale_order";
 
 
@@ -12,7 +10,10 @@ class SaleOrderInfo extends Component {
         getInfo(this.props.match.params.id)
     }
     //点击保存
-    handleSave= ()=>{this.formRef.handleSubmit()}
+    handleSave= () => {
+        this.formRef.handleSubmit()
+    }
+
     render() {
         const {saleOrderInfo} = this.props
         return (
@@ -32,4 +33,4 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch(saleActionCreator.querySaleOrderInfo({"id":id}))
     }
 })
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaleOrderInfo));
+export default connect(mapStateToProps, mapDispatchToProps)(SaleOrderInfo);

@@ -63,7 +63,7 @@
         this.writeBackFunc = this.props.writeBackFunc
         this.state = { data: this.props.dataSource, editingKey: '' };
         this.columns = [...this.props.columns, {
-            title: 'operation',
+            title: '操作',
             dataIndex: 'operation',
             render: (text, record) => {
                 const editable = this.isEditing(record);
@@ -73,23 +73,20 @@
                         <span>
                         <EditableContext.Consumer>
                             {form => (
-                            <a
-                                href="javascript:;"
-                                onClick={() => this.save(form, record.stockId)}
+                            <a href="javascript:;" onClick={() => this.save(form, record.stockId)}
                                 style={{ marginRight: 8 }}>
-                                Save
+                                保存
                             </a>
                             )}
                         </EditableContext.Consumer>
-                        <Popconfirm
-                            title="Sure to cancel?"
+                        <Popconfirm title="Sure to cancel?"
                             onConfirm={() => this.cancel(record.stockId)}
                         >
-                            <a>Cancel</a>
+                            <a>取消</a>
                         </Popconfirm>
                         </span>
                     ) : (
-                        <a onClick={() => this.edit(record.stockId)}>Edit</a>
+                        <a onClick={() => this.edit(record.stockId)}>编辑</a>
                     )}
                     </div>
                 );
@@ -97,6 +94,7 @@
         }];
         console.log(this.columns)
     }
+
     componentWillReceiveProps(nextProps){
         this.setState({
             data: nextProps.dataSource
@@ -138,22 +136,6 @@
       this.setState({ editingKey: key });
     }
 
-    handleAdd = () => {
-        const { data } = this.state;
-        const newData = {
-          id: 1000,
-          goodsId : 1001,
-          goodsName : "Pitaty gold",
-          goodsQuantity : 99,
-          costUnitPrice : 5.00,
-          saleUnitPrice : 10.00,
-          remark : "Remark...",
-        };
-        this.setState({
-          data: [...data, newData],
-        });
-      }
-
     render() {
       const components = {
         body: {
@@ -169,7 +151,7 @@
           ...col,
           onCell: record => ({
             record,
-            inputType: col.dataIndex === 'age' ? 'number' : 'text',
+            inputType: col.dataIndex === 'quantity' ? 'number' : 'text',
             dataIndex: col.dataIndex,
             title: col.title,
             editing: this.isEditing(record),
