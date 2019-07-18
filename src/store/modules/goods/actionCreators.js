@@ -1,9 +1,35 @@
 import * as constants from './constants';
 import Http from "../../../http/http";
-import {api_categories_all,api_goods_stock_edit,api_supplier_all,
-api_goods_edit} from "../../../api"
+import {api_categories_all,api_goods_stock_edit,api_supplier_all,api_goods_edit} from "../../../api"
 
 
+//更新商品列表数据
+export const updateGoodsTableData = (value) => ({
+	type: constants.updateGoodsTableData,
+	value
+})
+
+//更新选中的商品信息
+export const updateGoodsBasicInfo = (value) => ({
+	type: constants.updateGoodsBasicInfo,
+	value
+})
+
+
+//更新选中的商品库存信息
+export const updateGoodsStocksInfo = (value) => ({
+	type: constants.updateGoodsStocksInfo,
+	value
+})
+//清除商品信息
+export const clearGoodsInfo = () => ({
+	type: constants.clearGoodsInfo,
+})
+
+// clean goods picture list
+export const clearGoodsPics = () => ({
+    type : constants.clear_goods_pictures
+})
 
 //获取商品列表数据
 export const getGoodsTableData = (params) => {
@@ -15,12 +41,6 @@ export const getGoodsTableData = (params) => {
 	}
 }
 
-//更新商品列表数据
-export const updateGoodsTableData = (value) => ({
-	type: constants.updateGoodsTableData,
-	value
-})
-
 //获取选中的商品基本信息
 export const getGoodsBasicInfo = (goodsId) => {
     return (dispatch) => {
@@ -30,12 +50,6 @@ export const getGoodsBasicInfo = (goodsId) => {
         })
     }
 }
-
-//更新选中的商品信息
-export const updateGoodsBasicInfo = (value) => ({
-	type: constants.updateGoodsBasicInfo,
-	value
-})
 
 //获取选中的商品库存信息
 export const getGoodsStocksInfo = (goodsId) => {
@@ -57,16 +71,6 @@ export const editStocks = (params) => {
         })
     }
 }
-
-//更新选中的商品库存信息
-export const updateGoodsStocksInfo = (value) => ({
-	type: constants.updateGoodsStocksInfo,
-	value
-})
-//清除商品信息
-export const clearGoodsInfo = () => ({
-	type: constants.clearGoodsInfo,
-})
 //编辑商品信息
 export const updateGood = (goods, callBack) => {
     return (dispatch) => {

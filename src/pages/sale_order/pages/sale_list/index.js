@@ -4,6 +4,9 @@ import SaleOrderTable from "../../components/saleOrderTable";
 import { defaultPagination } from "../../../../utils/pageParams";
 import { actionCreators as saleOrderActionCreator } from "../../../../store/modules/sale_order";
 import SearchFrom from "../../components/search_form"
+import Http from '../../../../http/http';
+import { api_sale_order_pay } from '../../../../api';
+
 
 
 class SaleOrderList extends Component {
@@ -12,17 +15,22 @@ class SaleOrderList extends Component {
         const { getSaleOrderTableData } = this.props;
         getSaleOrderTableData(defaultPagination())
     }
+
+    doPayment(orderId) {
+        Http.postJson(api_sale_order_pay,{id : orderId})
+    }
+
     render() {
         const { saleOrderTableData, saleOrderTableDataPagination } = this.props;
         const { getSaleOrderTableData } = this.props;
         return (
             <Fragment>
-                
                 <SearchFrom></SearchFrom>
                 <SaleOrderTable
                     tableData={saleOrderTableData.toJS()}
                     pagination={saleOrderTableDataPagination}
                     onChangeListData={getSaleOrderTableData}
+                    onPay = {this.doPayment}
                 ></SaleOrderTable>
             </Fragment>
         )

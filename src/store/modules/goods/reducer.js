@@ -44,6 +44,8 @@ export default (state = defaultState, action) => {
                 "stocks": [],
                 "goodsPicsList": []
             }))
+        case constants.clear_goods_pictures:
+            return state.set("goodsPicsList",fromJS([]))
         case constants.updateSupplierList:
             return state.set("supplierList", action.value.suppliers?fromJS(action.value.suppliers):fromJS([]))
         case constants.updateGoodsPicsList:

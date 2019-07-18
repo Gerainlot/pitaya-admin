@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { Table, Divider } from 'antd';
+import { Table, Divider, Button } from 'antd';
 import {saleOrderTableDataPageParams} from "../../../../utils/pageParams";
 
 const { Column } = Table;
@@ -11,10 +11,19 @@ class SaleOrderTable extends Component {
         const { onChangeListData } = this.props;
         onChangeListData(saleOrderTableDataPageParams(pagination.current))
     }
-    //点击删除
+
     handleDelete(e, id, a){
         console.log(e, id, a)
     }
+
+    handlePay = (id) => {
+        const { onPay } = this.props;
+        if (onPay) {
+            onPay(id)
+        }
+        
+    }
+
     render() {
         const { tableData, pagination } = this.props;
         return (
@@ -27,17 +36,20 @@ class SaleOrderTable extends Component {
                     pageSize: pagination.get("pageSize"),
                     total: pagination.get("total"),
                 }}
+                scroll={{x : 1300}}
                 onChange={this.handlePaginationChange} 
             >
                 <Column
                     title="id"
                     dataIndex="id"
                     key="id"
+                    fixed="left"
                 />
                 <Column
                     title="订单号"
                     dataIndex="orderNo"
                     key="orderNo"
+                    fixed="left"
                 />
                 <Column
                     title="下单时间"
@@ -92,11 +104,14 @@ class SaleOrderTable extends Component {
                 <Column
                     title="Action"
                     key="action"
+                    fixed="right"
                     render={(text, record) => (
                         <Fragment>
                             <Link to={`/salemanage/info/${record.id}`}>详情</Link>
                             <Divider type="vertical" />
                             <span onClick={this.handleDelete.bind(this, record.id, 100)}>删除</span>
+                            <Divider type="vertical" />
+                            <Button type={"dashed"} onClick={this.handlePay.bind(this,record.id)}>付款</Button>
                         </Fragment>
                     )}
                 />

@@ -47,7 +47,14 @@ class DynamicStockSet extends React.Component {
     // can use data-binding to get
     const keys = form.getFieldValue('keys');
     let goodsStocks = form.getFieldValue('goodsStocks');
-    const nextKeys = keys.concat(goodsStocks.length);
+    let stockCount
+    if (goodsStocks) {
+        stockCount = goodsStocks.length
+    }else {
+        stockCount = 0
+        goodsStocks = [] 
+    }
+    const nextKeys = keys.concat(stockCount);
     // can use data-binding to set
     // important! notify form to detect changes
     form.setFieldsValue({

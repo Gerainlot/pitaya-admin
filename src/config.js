@@ -1,4 +1,5 @@
-const config = {
+
+export const config = {
     dev: {
         apiRootURL: 'http://localhost:8090/',
         basename: '/dev',
@@ -9,4 +10,9 @@ const config = {
     }
 }
 
-export default config
+let host = config.prod.apiRootURL;
+if (process.env.NODE_ENV === 'development') {
+    host = config.dev.apiRootURL;
+}
+
+export const Host = host

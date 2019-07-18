@@ -30,9 +30,8 @@ class AdvancedSearchForm extends Component {
                         <Select style={{ width: 120 }}>
                             <Option value="">全部</Option>
                             <Option value="REFUNDING">退款中</Option>
-                            <Option value="WT_PAY">待付款</Option>
                             <Option value="PAYED">已付款</Option>
-                            <Option value="CREATED">已创建</Option>
+                            <Option value="CREATED">待付款</Option>
                         </Select>
                     )}
                 </Form.Item>

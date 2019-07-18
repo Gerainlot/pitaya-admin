@@ -73,7 +73,7 @@ class GoodsInfoForm extends Component {
     }
 
     render() {
-        const { getFieldDecorator, getFieldValue } = this.props.form;
+        const { getFieldDecorator} = this.props.form;
         const { supplierList } = this.props;
         const formItemLayout = {
             labelCol: {
@@ -90,40 +90,40 @@ class GoodsInfoForm extends Component {
             <Fragment>
                 <Form>
                     <Divider orientation="left">基本信息</Divider>
-                    <Form.Item 
-                        {...formItemLayout}
-                        label="商品名称"
-                    >
-                    {getFieldDecorator('name',{
-                        rules: [
-                            { required: true, message: '商品名称为必填项' },
-                        ],
-                    })(
-                        <Input placeholder="请输入商品名称" />
-                    )}
+                    <Form.Item {...formItemLayout} label="商品名称">
+                        {getFieldDecorator('name',{
+                            rules: [
+                                { required: true, message: '商品名称为必填项' },
+                            ],
+                        })(
+                            <Input placeholder="请输入商品名称" />
+                        )}
                     </Form.Item>
-                    <Form.Item 
-                        {...formItemLayout}
-                        label="商品类别"
-                    >
-                    {getFieldDecorator('category',{
-                        rules: [
-                            { required: true, message: '请选择商品分类' },
-                        ],
-                    })(
-                        <Select placeholder="请选择商品分类">
-                            {this.state.allCategories.map(item => {
-                                return (
-                                    <Select.Option value={item.id}>{item.name}</Select.Option>
-                                )
-                            })}
-                        </Select>
-                    )}
+                    <Form.Item {...formItemLayout} label="简要描述">
+                        {getFieldDecorator('briefDescription',{
+                            rules: [
+                                { required: true, message: '简要描述为必填项' },
+                            ],
+                        })(
+                            <Input placeholder="请对商品进行简要描述" />
+                        )}
                     </Form.Item>
-                    <Form.Item 
-                        {...formItemLayout}
-                        label="商品状态"
-                    >
+                    <Form.Item {...formItemLayout} label="商品类别">
+                        {getFieldDecorator('category',{
+                            rules: [
+                                { required: true, message: '请选择商品分类' },
+                            ],
+                        })(
+                            <Select placeholder="请选择商品分类">
+                                {this.state.allCategories.map(item => {
+                                    return (
+                                        <Select.Option value={item.id}>{item.name}</Select.Option>
+                                    )
+                                })}
+                            </Select>
+                        )}
+                    </Form.Item>
+                    <Form.Item  {...formItemLayout} label="商品状态">
                     {getFieldDecorator('status',{
                         initialValue : "ON_SALE",
                         rules: [
@@ -136,13 +136,15 @@ class GoodsInfoForm extends Component {
                         </Select>
                     )}
                     </Form.Item>
-                    <Form.Item 
-                        {...formItemLayout}
-                        label="生产地"
-                    >
-                    {getFieldDecorator('producingArea')(
-                        <Input placeholder="请输入生产地" />
-                    )}
+                    <Form.Item {...formItemLayout} label="零售价">
+                        {getFieldDecorator('retailPrice')(
+                            <Input placeholder="请输入零售价格" />
+                        )}
+                    </Form.Item>
+                    <Form.Item {...formItemLayout} label="生产地">
+                        {getFieldDecorator('producingArea')(
+                            <Input placeholder="请输入生产地" />
+                        )}
                     </Form.Item>
                     <Form.Item 
                         {...formItemLayout}
@@ -202,6 +204,12 @@ const WrappedGoodsInfoForm = Form.create({
             }),
             producingArea: Form.createFormField({
                 value: props.goodsInfo.getIn(["goods", "producingArea"])
+            }),
+            retailPrice: Form.createFormField({
+                value: props.goodsInfo.getIn(["goods", "retailPrice"])
+            }),
+            briefDescription: Form.createFormField({
+                value: props.goodsInfo.getIn(["goods", "briefDescription"])
             }),
             supplierId: Form.createFormField({
                 value: props.goodsInfo.getIn(["goods", "supplierId"])

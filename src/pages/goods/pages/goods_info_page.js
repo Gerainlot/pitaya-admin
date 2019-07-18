@@ -17,6 +17,7 @@ class GoodsInfo extends Component {
             getGoodsStocksInfo,
             getGoodsPicsList, 
             clearGoodsInfo,
+            clearGoodsPics,
             getSupplierList,
             getAllCategories
             } = this.props;
@@ -24,6 +25,7 @@ class GoodsInfo extends Component {
         getSupplierList()
         if(this.props.location.pathname === goods_add_path){
             clearGoodsInfo()
+            clearGoodsPics()
         }else{
             //获取商品基本信息
             getGoodsBasicInfo(this.props.match.params.goodsId)
@@ -80,6 +82,9 @@ class GoodsInfo extends Component {
             name: values.name,
             categoryId: values.category,
             producingArea: values.producingArea,
+            retailPrice : values.retailPrice,
+            briefDescription : values.briefDescription,
+            description : values.description,
             stocks: values.stocks,
             supplierId: values.supplierId,
             status : values.status,
@@ -134,6 +139,9 @@ const mapDispatchToProps = (dispatch) => ({
     //清除商品信息
     clearGoodsInfo(){
         dispatch(goodsActionCreators.clearGoodsInfo())
+    },
+    clearGoodsPics(){
+        dispatch(goodsActionCreators.clearGoodsPics())
     },
     //获取供应商列表信息
     getSupplierList(){

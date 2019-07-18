@@ -63,6 +63,7 @@ class PicturesWall extends Component {
     }
     render() {
         const { uploadUrl } = this.props;
+        console.log("上传地址：",uploadUrl)
         const { previewVisible, previewImage, fileList } = this.state;
         const uploadButton = (
             <div>

@@ -3,19 +3,19 @@ import qs from "qs";
 
 import { message } from "antd";
 
-import conf from "../config"
+import {Host} from "../config"
 import TokenManager from "./token_manager";
 
 
 //开发环境 和 测试环境
-let apiRootURL = conf.prod.apiRootURL;
-if (process.env.NODE_ENV === 'development') {
-    apiRootURL = conf.dev.apiRootURL;
-}
+// let host = conf.prod.apiRootURL;    
+// if (process.env.NODE_ENV === 'development') {
+//     host = conf.dev.apiRootURL;
+// }
 const statusOk = "success"
 // axios 配置
 axios.defaults.timeout = 5000;
-axios.defaults.baseURL = apiRootURL;
+axios.defaults.baseURL = Host;
 
 
 // http request 拦截器
