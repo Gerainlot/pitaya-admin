@@ -9,7 +9,7 @@
     "draft-js": "^0.10.5",
     "draftjs-to-html": "^0.8.4",
     "immutable": "^4.0.0-rc.12",
-    "node-sass": "^4.10.0",
+    "node-sass": "^7.0.0",
     "prop-types": "^15.6.2",
     "qs": "^6.6.0",
     "react": "^16.6.3",
